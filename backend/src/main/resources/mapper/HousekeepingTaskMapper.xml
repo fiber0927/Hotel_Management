@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotel.mapper.HousekeepingTaskMapper">
+    <select id="findAll" resultType="HousekeepingTask">
+        SELECT * FROM housekeeping_task ORDER BY created_at DESC
+    </select>
+    <select id="findById" resultType="HousekeepingTask">
+        SELECT * FROM housekeeping_task WHERE id = #{id}
+    </select>
+    <select id="findByRoomId" resultType="HousekeepingTask">
+        SELECT * FROM housekeeping_task WHERE room_id = #{roomId} ORDER BY created_at DESC
+    </select>
+    <select id="findByStatus" resultType="HousekeepingTask">
+        SELECT * FROM housekeeping_task WHERE status = #{status} ORDER BY created_at DESC
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO housekeeping_task (room_id, task_type, priority, status, notes)
+        VALUES (#{roomId}, #{taskType}, #{priority}, #{status}, #{notes})
+    </insert>
+    <update id="update">
+        UPDATE housekeeping_task SET room_id=#{roomId}, task_type=#{taskType},
+        priority=#{priority}, status=#{status}, notes=#{notes}, completed_at=#{completedAt}
+        WHERE id=#{id}
+    </update>
+    <update id="updateStatus">
+        UPDATE housekeeping_task SET status=#{status} WHERE id=#{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM housekeeping_task WHERE id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotel.mapper.CheckInRecordMapper">
+    <select id="findAll" resultType="CheckInRecord">
+        SELECT * FROM check_in_record ORDER BY created_at DESC
+    </select>
+    <select id="findById" resultType="CheckInRecord">
+        SELECT * FROM check_in_record WHERE id = #{id}
+    </select>
+    <select id="findByStatus" resultType="CheckInRecord">
+        SELECT * FROM check_in_record WHERE status = #{status} ORDER BY created_at DESC
+    </select>
+    <select id="findByBookingId" resultType="CheckInRecord">
+        SELECT * FROM check_in_record WHERE booking_id = #{bookingId}
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO check_in_record (booking_id, room_id, check_in_time, status)
+        VALUES (#{bookingId}, #{roomId}, #{checkInTime}, #{status})
+    </insert>
+    <update id="update">
+        UPDATE check_in_record SET room_id=#{roomId}, check_in_time=#{checkInTime},
+        check_out_time=#{checkOutTime}, status=#{status} WHERE id=#{id}
+    </update>
+</mapper>

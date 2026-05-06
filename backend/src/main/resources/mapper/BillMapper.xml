@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotel.mapper.BillMapper">
+    <select id="findAll" resultType="Bill">
+        SELECT * FROM bill ORDER BY created_at DESC
+    </select>
+    <select id="findById" resultType="Bill">
+        SELECT * FROM bill WHERE id = #{id}
+    </select>
+    <select id="findByCheckInId" resultType="Bill">
+        SELECT * FROM bill WHERE check_in_id = #{checkInId}
+    </select>
+    <select id="findByIsPaid" resultType="Bill">
+        SELECT * FROM bill WHERE is_paid = #{isPaid} ORDER BY created_at DESC
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO bill (check_in_id, room_charge, other_charges, total_amount, is_paid, payment_method, notes)
+        VALUES (#{checkInId}, #{roomCharge}, #{otherCharges}, #{totalAmount}, #{isPaid}, #{paymentMethod}, #{notes})
+    </insert>
+    <update id="update">
+        UPDATE bill SET room_charge=#{roomCharge}, other_charges=#{otherCharges},
+        total_amount=#{totalAmount}, is_paid=#{isPaid}, payment_method=#{paymentMethod},
+        notes=#{notes}, paid_at=#{paidAt} WHERE id=#{id}
+    </update>
+    <update id="updateIsPaid">
+        UPDATE bill SET is_paid=1, paid_at=NOW() WHERE id=#{id}
+    </update>
+</mapper>
