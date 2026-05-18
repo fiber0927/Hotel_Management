@@ -37,6 +37,10 @@ export default {
   getRooms() { return api.get('/rooms') },
   getRoom(id) { return api.get(`/rooms/${id}`) },
   getAvailableRooms() { return api.get('/rooms/available') },
+  getRoomsByFloor(floor) { return api.get(`/rooms/floor/${floor}`) },
+  getRoomsByType(roomType) { return api.get(`/rooms/type/${roomType}`) },
+  getRoomsByFloorAndType(floor, roomType) { return api.get(`/rooms/floor/${floor}/type/${roomType}`) },
+  getRoomStats() { return api.get('/rooms/stats') },
   addRoom(room) { return api.post('/rooms', room) },
   updateRoom(id, room) { return api.put(`/rooms/${id}`, room) },
   updateRoomStatus(id, status) { return api.patch(`/rooms/${id}/status`, { status }) },
@@ -52,12 +56,13 @@ export default {
   // Booking
   getBookings() { return api.get('/bookings') },
   getBooking(id) { return api.get(`/bookings/${id}`) },
-  getBookingsByGuest(guestId) { return api.get(`/bookings/guest/${guestId}`) },
+  getBookingsByGuest(customerId) { return api.get(`/bookings/guest/${customerId}`) },
   getBookingsByStatus(status) { return api.get(`/bookings/status/${status}`) },
   addBooking(booking) { return api.post('/bookings', booking) },
   updateBooking(id, booking) { return api.put(`/bookings/${id}`, booking) },
   confirmBooking(id) { return api.patch(`/bookings/${id}/confirm`) },
   cancelBooking(id) { return api.patch(`/bookings/${id}/cancel`) },
+  rejectBooking(id) { return api.patch(`/bookings/${id}/reject`) },
   deleteBooking(id) { return api.delete(`/bookings/${id}`) },
 
   // CheckIn

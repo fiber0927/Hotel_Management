@@ -62,6 +62,16 @@ public class BookingService {
         return bookingMapper.updateStatus(id, "completed");
     }
 
+    // 拒绝预订
+    @Transactional
+    public int rejectBooking(Long id) {
+        Booking booking = bookingMapper.findById(id);
+        if (booking == null) {
+            return 0;
+        }
+        return bookingMapper.updateStatus(id, "rejected");
+    }
+
     // 确认预订 → 房间变为「已被预约」，自动创建清洁任务
     @Transactional
     public int confirmBooking(Long id) {

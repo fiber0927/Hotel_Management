@@ -11,18 +11,6 @@ export default {
 </script>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Microsoft YaHei', Arial, sans-serif;
-}
-
-#app {
-  min-height: 100vh;
-  background-color: #f5f5f5;
-}
+/* Base styles are now in src/assets/styles/global.css */
+/* This file intentionally minimal - all global styles are centralized */
 </style>

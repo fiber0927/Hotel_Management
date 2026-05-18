@@ -9,14 +9,14 @@
         SELECT * FROM booking WHERE id = #{id}
     </select>
     <select id="findByGuestId" resultType="Booking">
-        SELECT * FROM booking WHERE guest_id = #{guestId} ORDER BY created_at DESC
+        SELECT * FROM booking WHERE customer_id = #{guestId} ORDER BY created_at DESC
     </select>
     <select id="findByStatus" resultType="Booking">
         SELECT * FROM booking WHERE status = #{status} ORDER BY created_at DESC
     </select>
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO booking (guest_id, room_id, check_in_date, check_out_date, status, special_requests)
-        VALUES (#{guestId}, #{roomId}, #{checkInDate}, #{checkOutDate}, #{status}, #{specialRequests})
+        INSERT INTO booking (customer_id, room_id, check_in_date, check_out_date, status, special_requests)
+        VALUES (#{customerId}, #{roomId}, #{checkInDate}, #{checkOutDate}, #{status}, #{specialRequests})
     </insert>
     <update id="update">
         UPDATE booking SET guest_id=#{guestId}, room_id=#{roomId}, check_in_date=#{checkInDate},

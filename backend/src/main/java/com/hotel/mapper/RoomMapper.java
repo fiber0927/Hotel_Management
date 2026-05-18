@@ -10,6 +10,9 @@ public interface RoomMapper {
     List<Room> findAll();
     Room findById(Long id);
     List<Room> findAvailable();
+    List<Room> findByFloor(@Param("floor") Integer floor);
+    List<Room> findByRoomType(@Param("roomType") String roomType);
+    List<Room> findByFloorAndType(@Param("floor") Integer floor, @Param("roomType") String roomType);
     int insert(Room room);
     int update(Room room);
     int updateStatus(@Param("id") Long id, @Param("status") String status);

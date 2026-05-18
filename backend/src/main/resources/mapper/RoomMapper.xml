@@ -11,6 +11,15 @@
     <select id="findAvailable" resultType="Room">
         SELECT * FROM room WHERE status = 'available' ORDER BY room_number
     </select>
+    <select id="findByFloor" resultType="Room">
+        SELECT * FROM room WHERE floor = #{floor} ORDER BY room_number
+    </select>
+    <select id="findByRoomType" resultType="Room">
+        SELECT * FROM room WHERE room_type = #{roomType} ORDER BY room_number
+    </select>
+    <select id="findByFloorAndType" resultType="Room">
+        SELECT * FROM room WHERE floor = #{floor} AND room_type = #{roomType} ORDER BY room_number
+    </select>
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO room (room_number, room_type, floor, status, price)
         VALUES (#{roomNumber}, #{roomType}, #{floor}, #{status}, #{price})

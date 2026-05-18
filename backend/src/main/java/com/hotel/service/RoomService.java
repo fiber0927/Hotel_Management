@@ -25,6 +25,18 @@ public class RoomService {
         return roomMapper.findAvailable();
     }
 
+    public List<Room> getRoomsByFloor(Integer floor) {
+        return roomMapper.findByFloor(floor);
+    }
+
+    public List<Room> getRoomsByRoomType(String roomType) {
+        return roomMapper.findByRoomType(roomType);
+    }
+
+    public List<Room> getRoomsByFloorAndType(Integer floor, String roomType) {
+        return roomMapper.findByFloorAndType(floor, roomType);
+    }
+
     public int addRoom(Room room) {
         return roomMapper.insert(room);
     }

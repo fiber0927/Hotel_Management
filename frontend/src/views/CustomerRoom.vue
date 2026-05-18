@@ -1,47 +1,104 @@
 <template>
   <div class="customer-room">
-    <h2>浏览房间</h2>
-    <el-row :gutter="20">
-      <el-col :span="8" v-for="room in rooms" :key="room.id">
-        <div class="room-card">
-          <div class="room-header">
-            <span class="room-number">{{ room.roomNumber }}</span>
-            <el-tag :type="getRoomStatusType(room.status)">
-              {{ getRoomStatusText(room.status) }}
-            </el-tag>
-          </div>
-          <div class="room-body">
-            <p>类型：{{ room.roomType === 'standard' ? '标准间' : '套房' }}</p>
-            <p>楼层：{{ room.floor }}楼</p>
-            <p class="price">￥{{ room.price }} / 晚</p>
-          </div>
-          <div class="room-footer">
-            <el-button type="primary" size="small" :disabled="room.status !== 'available'" @click="handleBooking(room)">
-              立即预订
-            </el-button>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">浏览房间</h1>
+      <p class="page-description">选择心仪的房间进行预订</p>
+    </div>
 
-    <el-dialog v-model="bookingDialog" title="预订房间" width="500px">
-      <el-form :model="bookingForm" label-width="100px">
+    <!-- Floor Filter -->
+    <div class="floor-filter">
+      <span class="filter-label">选择楼层：</span>
+      <el-radio-group v-model="selectedFloor" @change="handleFloorChange">
+        <el-radio-button :value="0">全部</el-radio-button>
+        <el-radio-button :value="1">1楼</el-radio-button>
+        <el-radio-button :value="2">2楼</el-radio-button>
+        <el-radio-button :value="3">3楼</el-radio-button>
+        <el-radio-button :value="4">4楼</el-radio-button>
+      </el-radio-group>
+    </div>
+
+    <!-- Room Grid -->
+    <div class="room-grid">
+      <el-row :gutter="24">
+        <el-col :xs="24" :sm="12" :lg="8" v-for="room in rooms" :key="room.id">
+          <div class="room-card">
+            <div class="room-header">
+              <span class="room-number">{{ room.roomNumber }}</span>
+              <span class="status-badge" :class="'status--' + room.status">
+                {{ getRoomStatusText(room.status) }}
+              </span>
+            </div>
+            <div class="room-body">
+              <div class="room-info">
+                <span class="info-label">类型</span>
+                <span class="info-value">{{ room.roomType === 'standard' ? '标准间' : '套房' }}</span>
+              </div>
+              <div class="room-info">
+                <span class="info-label">楼层</span>
+                <span class="info-value">{{ room.floor }}楼</span>
+              </div>
+              <div class="room-price">
+                <span class="price-label">每晚</span>
+                <span class="price-value">¥{{ room.price }}</span>
+              </div>
+            </div>
+            <div class="room-footer">
+              <button
+                class="btn btn--primary btn--block"
+                :disabled="room.status !== 'available'"
+                @click="handleBooking(room)"
+              >
+                {{ room.status === 'available' ? '立即预订' : '暂不可预订' }}
+              </button>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+
+      <!-- Empty State -->
+      <div v-if="rooms.length === 0" class="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 21V7H7V21H3Z"/>
+          <path d="M7 21V11H11V21H7Z"/>
+          <path d="M11 21V9H15V21H11Z"/>
+          <path d="M15 21V13H19V21H15Z"/>
+        </svg>
+        <p class="empty-text">暂无可用房间</p>
+      </div>
+    </div>
+
+    <!-- Booking Dialog -->
+    <el-dialog v-model="bookingDialog" title="预订房间" width="500px" class="custom-dialog">
+      <el-form :model="bookingForm" label-width="100px" class="dialog-form">
         <el-form-item label="房间号">
           <span class="room-number-display">{{ bookingForm.roomNumber }}</span>
         </el-form-item>
         <el-form-item label="入住日期" required>
-          <el-date-picker v-model="bookingForm.checkInDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" placeholder="选择入住日期" />
+          <el-date-picker
+            v-model="bookingForm.checkInDate"
+            type="date"
+            value-format="YYYY-MM-DD"
+            style="width: 100%"
+            placeholder="选择入住日期"
+          />
         </el-form-item>
         <el-form-item label="退房日期" required>
-          <el-date-picker v-model="bookingForm.checkOutDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" placeholder="选择退房日期" />
+          <el-date-picker
+            v-model="bookingForm.checkOutDate"
+            type="date"
+            value-format="YYYY-MM-DD"
+            style="width: 100%"
+            placeholder="选择退房日期"
+          />
         </el-form-item>
         <el-form-item label="联系电话" required>
           <el-input v-model="bookingForm.phone" placeholder="请输入手机号" maxlength="11" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="bookingDialog = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit">确认预订</el-button>
+        <button class="btn btn--secondary" @click="bookingDialog = false">取消</button>
+        <button class="btn btn--primary" @click="handleSubmit">确认预订</button>
       </template>
     </el-dialog>
   </div>
@@ -56,6 +113,8 @@ export default {
   data() {
     return {
       rooms: [],
+      allRooms: [],
+      selectedFloor: 0,
       bookingDialog: false,
       bookingForm: {
         roomId: null,
@@ -72,11 +131,19 @@ export default {
   methods: {
     loadRooms() {
       api.getRooms().then(res => {
+        this.allRooms = res.data
         this.rooms = res.data
       }).catch(err => {
         console.error('加载房间失败:', err)
         ElMessage.error('加载房间列表失败')
       })
+    },
+    handleFloorChange(floor) {
+      if (floor === 0) {
+        this.rooms = this.allRooms
+      } else {
+        this.rooms = this.allRooms.filter(room => room.floor === floor)
+      }
     },
     handleBooking(room) {
       const user = JSON.parse(sessionStorage.getItem('user') || '{}')
@@ -116,91 +183,229 @@ export default {
       }
 
       const user = JSON.parse(sessionStorage.getItem('user') || '{}')
-      api.addGuest({
-        name: user.name || user.username || '顾客',
-        phone: this.bookingForm.phone
-      }).then(res => {
-        const guestId = res.data.id
-        api.addBooking({
-          guestId: guestId,
-          roomId: this.bookingForm.roomId,
-          checkInDate: this.bookingForm.checkInDate,
-          checkOutDate: this.bookingForm.checkOutDate,
-          status: 'pending'
-        }).then(() => {
-          ElMessage.success('预订成功，请等待管理员确认')
-          this.bookingDialog = false
-          this.loadRooms()
-        }).catch(err => {
-          console.error('预订失败:', err)
-          ElMessage.error('预订失败: ' + (err.response?.data?.message || '未知错误'))
-        })
+      // 使用用户的 customer ID（从 sessionStorage 获取）直接创建预订
+      api.addBooking({
+        customerId: user.id,  // user.id 是 customer 表的 ID
+        roomId: this.bookingForm.roomId,
+        checkInDate: this.bookingForm.checkInDate,
+        checkOutDate: this.bookingForm.checkOutDate,
+        status: 'pending'
+      }).then(() => {
+        ElMessage.success('预订成功，请等待管理员确认')
+        this.bookingDialog = false
+        this.loadRooms()
       }).catch(err => {
-        console.error('创建客户失败:', err)
-        ElMessage.error('创建客户信息失败: ' + (err.response?.data?.message || '未知错误'))
+        ElMessage.error('预订失败: ' + (err.response?.data?.message || '未知错误'))
       })
     },
-    getRoomStatusType(status) {
-      if (status === 'available') return 'success'
-      if (status === 'booked') return 'warning'
-      if (status === 'occupied') return 'danger'
-      if (status === 'cleaning') return 'info'
-      return 'info'
-    },
     getRoomStatusText(status) {
-      if (status === 'available') return '可预订'
-      if (status === 'booked') return '已被预约'
-      if (status === 'occupied') return '已入住'
-      if (status === 'cleaning') return '清洁中'
-      if (status === 'maintenance') return '维修中'
-      return '不可预订'
+      const map = {
+        available: '可预订',
+        booked: '已被预约',
+        occupied: '已入住',
+        cleaning: '清洁中',
+        maintenance: '维修中'
+      }
+      return map[status] || '不可预订'
     }
   }
 }
 </script>
 
 <style scoped>
-.customer-room h2 { margin-bottom: 20px; }
+.page-header {
+  margin-bottom: var(--space-8);
+}
+
+.page-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.page-description {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.floor-filter {
+  margin-bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.filter-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+}
+
+.room-grid {
+  margin-bottom: var(--space-8);
+}
+
+:deep(.el-col) {
+  margin-bottom: var(--space-6);
+}
 
 .room-card {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.room-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 .room-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .room-number {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
 }
 
-.room-number-display {
-  font-size: 18px;
-  font-weight: bold;
-  color: #409eff;
+.status-badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
 }
 
-.room-body p {
-  margin: 8px 0;
-  color: #666;
+.status--available { background: #D1FAE5; color: #065F46; }
+.status--booked { background: #FEF3C7; color: #92400E; }
+.status--occupied { background: #FEE2E2; color: #991B1B; }
+.status--cleaning { background: var(--color-muted); color: var(--color-text-secondary); }
+.status--maintenance { background: #DBEAFE; color: #1E40AF; }
+
+.room-body {
+  padding: var(--space-5);
 }
 
-.price {
-  font-size: 24px;
-  color: #e74c3c;
-  font-weight: bold;
+.room-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.info-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.info-value {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+}
+
+.room-price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.price-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.price-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-danger);
+  font-family: var(--font-mono);
 }
 
 .room-footer {
-  margin-top: 15px;
-  text-align: right;
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-light);
+}
+
+.btn--primary:disabled {
+  background: var(--color-muted);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn--secondary {
+  background: var(--color-muted);
+  color: var(--color-text-primary);
+}
+
+.btn--secondary:hover {
+  background: var(--color-border);
+}
+
+.empty-state {
+  padding: var(--space-12);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.empty-state svg {
+  margin-bottom: var(--space-4);
+  opacity: 0.5;
+}
+
+.room-number-display {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-accent);
+}
+
+:deep(.custom-dialog) {
+  --el-dialog-border-radius: var(--radius-lg);
+}
+
+.dialog-form :deep(.el-form-item__label) {
+  font-weight: var(--font-medium);
 }
 </style>

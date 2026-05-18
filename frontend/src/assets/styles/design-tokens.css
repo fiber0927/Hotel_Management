@@ -1,0 +1,134 @@
+/**
+ * Design Tokens - Hotel Management System
+ * B2B Professional Theme
+ */
+
+:root {
+  /* ===== COLORS ===== */
+  /* Primary - Deep Navy */
+  --color-primary: #0F172A;
+  --color-primary-light: #1E293B;
+  --color-primary-dark: #020617;
+
+  /* Secondary */
+  --color-secondary: #334155;
+  --color-secondary-light: #475569;
+
+  /* Accent - Professional Blue */
+  --color-accent: #0369A1;
+  --color-accent-light: #0EA5E9;
+  --color-accent-dark: #075985;
+
+  /* Background */
+  --color-background: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-muted: #F1F5F9;
+
+  /* Foreground / Text */
+  --color-foreground: #020617;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-text-inverse: #FFFFFF;
+
+  /* Border */
+  --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+
+  /* Status Colors */
+  --color-success: #059669;
+  --color-success-light: #10B981;
+  --color-warning: #F59E0B;
+  --color-warning-light: #FBBF24;
+  --color-danger: #DC2626;
+  --color-danger-light: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Sidebar */
+  --sidebar-bg: #0F172A;
+  --sidebar-hover: #1E293B;
+  --sidebar-active-bg: #1E40AF;
+  --sidebar-active-border: #3B82F6;
+  --sidebar-text: #E2E8F0;
+  --sidebar-text-muted: #94A3B8;
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-sans: 'Inter', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+
+  /* Font Weights */
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* ===== SPACING ===== */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+
+  /* ===== BORDER RADIUS ===== */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;  /* 4px */
+  --radius-md: 0.5rem;   /* 8px */
+  --radius-lg: 0.75rem;  /* 12px */
+  --radius-xl: 1rem;     /* 16px */
+  --radius-full: 9999px;
+
+  /* ===== SHADOWS ===== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 250ms ease-out;
+  --transition-slow: 350ms ease-out;
+
+  /* ===== Z-INDEX ===== */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+
+  /* ===== LAYOUT ===== */
+  --sidebar-width: 240px;
+  --header-height: 64px;
+}
+
+/* ===== DARK MODE TOKENS (Future) ===== */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #020617;
+    --color-surface: #0F172A;
+    --color-foreground: #F8FAFC;
+  }
+} */

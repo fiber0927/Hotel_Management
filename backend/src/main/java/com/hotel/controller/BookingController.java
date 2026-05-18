@@ -39,9 +39,9 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<?> addBooking(@RequestBody Booking booking) {
         try {
-            // Validate required fields
-            if (booking.getGuestId() == null) {
-                return ResponseEntity.badRequest().body(Map.of("message", "客人ID不能为空"));
+            // Validate required fields - customerId is from customer table (the user id stored in session)
+            if (booking.getCustomerId() == null) {
+                return ResponseEntity.badRequest().body(Map.of("message", "客户ID不能为空"));
             }
             if (booking.getRoomId() == null) {
                 return ResponseEntity.badRequest().body(Map.of("message", "房间ID不能为空"));
@@ -90,6 +90,21 @@ public class BookingController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(Map.of("message", "确认失败: " + e.getMessage()));
+        }
+    }
+
+    @PatchMapping("/{id}/reject")
+    public ResponseEntity<?> rejectBooking(@PathVariable Long id) {
+        try {
+            int result = bookingService.rejectBooking(id);
+            if (result > 0) {
+                return ResponseEntity.ok(Map.of("message", "预订已拒绝", "id", id));
+            } else {
+                return ResponseEntity.badRequest().body(Map.of("message", "预订不存在或拒绝失败"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Map.of("message", "拒绝失败: " + e.getMessage()));
         }
     }
 
