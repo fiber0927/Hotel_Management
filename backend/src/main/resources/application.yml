@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  profiles:
+    active: local
   application:
     name: hotel-management
 
@@ -9,7 +11,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/hotel_management?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
-    password: 20050927
+    password: ${DB_PASSWORD:}
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

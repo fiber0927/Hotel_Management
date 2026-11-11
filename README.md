@@ -140,17 +140,20 @@ mysql -u root -p < database/schema.sql
 
 脚本会自动创建 `hotel_management` 库、8 张表，并写入 77 间房和默认管理员。
 
-### 2. 改数据库连接
+### 2. 配置数据库连接
 
-编辑 `backend/src/main/resources/application.yml`：
+仓库里**不包含数据库密码**。克隆后需要自己新建
+`backend/src/main/resources/application-local.yml`：
 
 ```yaml
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/hotel_management?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: 你的密码
+    password: 你的数据库密码
 ```
+
+这个文件已在 `.gitignore` 里，不会被提交。
+`application.yml` 中通过 `spring.profiles.active: local` 自动加载它，
+所以**不需要改任何启动命令**。
 
 ### 3. 启动后端
 

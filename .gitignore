@@ -25,6 +25,7 @@ logs/
 Thumbs.db
 
 # Environment
+application-local.yml
 .env
 .env.local
 
@@ -33,3 +34,9 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# 个人学习与面试准备材料（不提交）
+audit/
+interview-pack/
+docs/项目八股与面试问答.md
+docs/项目学习指南.md
