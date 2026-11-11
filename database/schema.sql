@@ -6,6 +6,9 @@
 CREATE DATABASE IF NOT EXISTS hotel_management DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE hotel_management;
 
+-- 明确指定连接字符集为 utf8mb4（脚本为 UTF-8，客户端默认可能是 gbk）
+SET NAMES utf8mb4;
+
 -- =====================================================
 -- 1. Admin table
 -- =====================================================
@@ -22,7 +25,23 @@ CREATE TABLE admin (
 INSERT INTO admin (username, password) VALUES ('admin', 'admin123');
 
 -- =====================================================
--- 2. Guest table
+-- 2. Customer table
+-- =====================================================
+DROP TABLE IF EXISTS customer;
+CREATE TABLE customer (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    name VARCHAR(50),
+    phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Customer accounts can also be created from the customer-side register page
+-- INSERT INTO customer (username, password, name, phone) VALUES ('test01', 'test123', 'Test User', '13800138000');
+
+-- =====================================================
+-- 3. Guest table
 -- =====================================================
 DROP TABLE IF EXISTS guest;
 CREATE TABLE guest (
@@ -34,7 +53,7 @@ CREATE TABLE guest (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =====================================================
--- 3. Room table
+-- 4. Room table
 -- =====================================================
 DROP TABLE IF EXISTS room;
 CREATE TABLE room (
@@ -42,7 +61,7 @@ CREATE TABLE room (
     room_number VARCHAR(10) NOT NULL UNIQUE,
     room_type VARCHAR(20) NOT NULL COMMENT 'standard/suite',
     floor INT NOT NULL,
-    status VARCHAR(20) DEFAULT 'available' COMMENT 'available/occupied/maintenance',
+    status VARCHAR(20) DEFAULT 'available' COMMENT 'available/booked/occupied',
     price DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -133,23 +152,25 @@ INSERT INTO room (room_number, room_type, floor, status, price) VALUES
 ('419', 'suite', 4, 'available', 498.00);
 
 -- =====================================================
--- 4. Booking table
+-- 5. Booking table
 -- =====================================================
 DROP TABLE IF EXISTS booking;
 CREATE TABLE booking (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    guest_id BIGINT NOT NULL,
+    guest_id BIGINT,
+    customer_id BIGINT,
+    room_id BIGINT,
     check_in_date DATE NOT NULL,
     check_out_date DATE NOT NULL,
-    status VARCHAR(20) DEFAULT 'confirmed' COMMENT 'confirmed/cancelled/completed',
+    status VARCHAR(20) DEFAULT 'confirmed' COMMENT 'pending/confirmed/cancelled/rejected/completed',
     special_requests TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (guest_id) REFERENCES guest(id)
+    KEY `guest_id` (`guest_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =====================================================
--- 5. Check-in record table
+-- 6. Check-in record table
 -- =====================================================
 DROP TABLE IF EXISTS check_in_record;
 CREATE TABLE check_in_record (
@@ -166,7 +187,7 @@ CREATE TABLE check_in_record (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =====================================================
--- 6. Housekeeping task table
+-- 7. Housekeeping task table
 -- =====================================================
 DROP TABLE IF EXISTS housekeeping_task;
 CREATE TABLE housekeeping_task (
@@ -183,7 +204,7 @@ CREATE TABLE housekeeping_task (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =====================================================
--- 7. Bill table
+-- 8. Bill table
 -- =====================================================
 DROP TABLE IF EXISTS bill;
 CREATE TABLE bill (

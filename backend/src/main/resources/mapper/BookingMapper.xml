@@ -19,7 +19,7 @@
         VALUES (#{customerId}, #{roomId}, #{checkInDate}, #{checkOutDate}, #{status}, #{specialRequests})
     </insert>
     <update id="update">
-        UPDATE booking SET guest_id=#{guestId}, room_id=#{roomId}, check_in_date=#{checkInDate},
+        UPDATE booking SET customer_id=#{customerId}, room_id=#{roomId}, check_in_date=#{checkInDate},
         check_out_date=#{checkOutDate}, status=#{status}, special_requests=#{specialRequests}
         WHERE id=#{id}
     </update>
